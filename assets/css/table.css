@@ -1,0 +1,26 @@
+table {
+    background-color: white;
+    text-align: left;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+th, td {
+    border: solid 1px black;
+    padding:0;
+}
+
+thead {
+    background-color: rgb(46, 6, 119);
+    color: white;
+    border-bottom: solid 5px;
+}
+
+tr:nth-child(even) {
+    background-color:#ddd;
+}
+
+tr:hover{
+    background-color: rgb(71, 0, 163);
+    color: white;
+}

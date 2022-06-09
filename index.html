@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <!-- Materialize css Link-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- CSS Link -->
+    <link rel="stylesheet" href="./assets/css/style.css">
+
+     <!-- Compiled and minified CSS -->
+     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+     <!-- Compiled and minified JavaScript -->
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <style>
+        .noVisible {
+            display: none;
+        }
+    </style>
+</head>
+<body onload="cargarPartida();">
+    <div class="container">
+        <h3><i class="material-icons">folder</i>Hechos Ocurridos</h3>
+        <hr>
+        <div id="form_edit" class="noVisible">
+            <h4>Datos de los hechos</h4>
+            <div>
+                <label>Titulo:</label>
+                <input type="text" name="datos" id="titulo">
+            </div>
+            <div>
+                <label>Fecha:</label>
+                <input type="date" name="datos" id="fecha">
+            </div>
+            <div>
+                <label>Tipo:</label>
+                <select name="datos" id="tipo" class="browser-default">
+                    <option value="Robo">Robo</option>
+                    <option value="Atraco">Atraco</option>
+                </select>
+            </div>
+            <div>
+                <label>Comentario:</label>
+                <textarea name="datos" id="comentario" cols="50" rows="10"></textarea>
+            </div>
+            <div>
+                <label>Cantidad de Heridos:</label>
+                <input type="text" name="datos" id="heridos">
+            </div>
+            <div>
+                <label>Cantidad de Muertos:</label>
+                <input type="text" name="datos" id="muertos">
+            </div>
+            <div>
+                <label>Valor perdido:</label>
+                <input type="text" name="datos" id="valor_perdido">
+            </div>
+            <div>
+                <label>Ubicacion (Lat, Long):</label>
+                <input type="location" name="datos" id="ubicacion">
+            </div>
+            <div>
+                <label>Enlace al hecho en instagram:</label>
+                <img src="./assets/images/bxl-instagram.svg" alt="">
+                <input type="url" name="datos" id="instagram"></a>
+            </div>
+            <div>
+                <label>Estado:</label>
+                <select name="datos" id="estado" class="browser-default">
+                    <option value="Pendiente">Pendiente</option>
+                    <option value="Resuelto">Resuelto</option>
+                    <option value="Abandonado">Abandonado</option>
+                </select>
+            </div>
+            <div class="center-align">
+                <button onclick="save();" class="btn" id="btn_guardar">Guardar</button>
+            </div>
+        </div>
+        <div id="form_list">
+            <div class="right-align">
+                <button onclick="nuevo();" title="Agregar Hecho" class="btn-floating btn-large waves-effect waves-light-red">
+                    <i class="material-icons">add</i>
+                </button>
+            </div>
+            <h4>Hechos Encontrados</h4>
+            <table id="tablaDatos">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Titulo</th>
+                        <th>Tipo</th>
+                        <th>Comentario</th>
+                        <th>Heridos</th>
+                        <th>Muertos</th>
+                        <th>Valor perdido</th>
+                        <th>Ubicacion (Lat, Long)</th>
+                        <th>Enlace al hecho en instagram</th>
+                        <th>Estado</th>
+                        <td>-</td>
+                    </tr>
+                </thead>
+                <tbody id="tablaDatos">
+
+                </tbody>
+            </table>
+        </div>
+        <a href="./home.html"><button class="btn">Back</button></a>
+        <a href="./mapa.html"><button class="btn">Ver Mapa</button></a>
+    </div>
+
+    
+    </div>
+    <script>
+
+var db_datos = [];
+
+
+
+
+function nuevo() {
+
+    if(edit_item == null) {
+        var campos = document.getElementsByName("datos");
+        for (var i = 0; i < campos.length; i++) {
+            campos[i].value = "";
+        }
+    }
+    document.getElementById("form_edit").setAttribute("class","")
+    document.getElementById("form_list").setAttribute("class","noVisible")
+}
+
+function list() {
+    document.getElementById("form_edit").setAttribute("class","noVisible")
+    document.getElementById("form_list").setAttribute("class","")
+}
+
+var edit_item = null;
+
+function editar(index) {
+    edit_item = index;
+    nuevo();
+    var datos = db_datos[index];
+    campos = document.getElementsByName("datos");
+    for (var i = 0; i < campos.length; i++) {
+        campos[i].value = datos[campos[i].id];
+    }
+}
+
+function save() {
+    obj = {};
+    campos = document.getElementsByName("datos");
+    for(var x=0; x < campos.length; x++) {
+        obj[campos[x].id] = campos[x].value;
+    }
+
+    if(edit_item == null) {
+        db_datos.push(obj);
+    } else {
+        db_datos[edit_item] = obj;
+        edit_item = null;
+    }
+
+    list();
+    mostrarDatos();
+
+    var tmp_data = JSON.stringify(db_datos);
+    localStorage.setItem("db_datos", tmp_data);
+}
+
+function make_td(text) {
+    var td = document.createElement("td");
+    td.innerHTML = text;
+    return td;
+}
+
+function mostrarDatos() {
+    table = document.getElementById("tablaDatos");
+    table.innerHtml = "";
+
+    db_datos.forEach(function(fila){
+        tr = document.createElement("tr");
+
+        tr.appendChild(make_td(fila.titulo));
+        tr.appendChild(make_td(fila.fecha));
+        tr.appendChild(make_td(fila.tipo));
+        tr.appendChild(make_td(fila.comentario));
+        tr.appendChild(make_td(fila.heridos));
+        tr.appendChild(make_td(fila.muertos));
+        tr.appendChild(make_td(fila.valor_perdido));
+        tr.appendChild(make_td(fila.ubicacion));
+        tr.appendChild(make_td(fila.instagram));
+        tr.appendChild(make_td(fila.estado));
+
+        td = document.createElement("td");
+        btn = document.createElement("button");
+        btn.setAttribute("onclick","editar("+db_datos.indexOf(fila)+")");
+        btn.setAttribute("class","btn-floating btn-small waves-effect waves-light red");
+        btn.innerHTML = "<i class='material-icons'>edit</i>";
+        td.appendChild(btn);
+        tr.appendChild(td);
+
+        btn = document.createElement("button");
+        btn.setAttribute("onclick","borrar("+db_datos.indexOf(fila)+")");
+        btn.setAttribute("class","btn-floating btn-small waves-effect waves-light red");
+        btn.innerHTML = "<i class='material-icons'>delete</i>";
+        td.appendChild(btn);
+
+        btn = document.createElement("button");
+        btn.setAttribute("onclick","imprimir("+db_datos.indexOf(fila)+")");
+        btn.setAttribute("class","btn-floating btn-small waves-effect waves-light red");
+        btn.innerHTML = "<i class='material-icons'>print</i>";
+        td.appendChild(btn);
+
+
+        tr.appendChild(td);
+
+
+
+
+        table.appendChild(tr);
+    });
+    
+}
+
+function imprimir(index){
+    var datos = db_datos[index];
+    
+    div = document.createElement("div");
+    div.innerHTML = "<h1>Animal Data</h1>";
+    div.innerHTML += "<p>Titulo: "+datos.titulo+"</p>";
+    div.innerHTML += "<p>Fecha: "+datos.fecha+"</p>";
+    div.innerHTML += "<p>Tipo: "+datos.tipo+"</p>";
+    div.innerHTML += "<p>Comentario: "+datos.comentario+"</p>";
+    div.innerHTML += "<p>Heridos: "+datos.heridos+"</p>";
+    div.innerHTML += "<p>Muertos: "+datos.muertos+"</p>";
+    div.innerHTML += "<p>Valor Perdido: "+datos.valor_perdido+"</p>";
+    div.innerHTML += "<p>Lugar: "+datos.ubicacion+"</p>";
+    div.innerHTML += "<p>Estado: "+datos.estado+"</p>";
+
+    var headstr = `<html><head><title></title>
+
+        <style>
+        body {
+            visibility: hidden;
+            background: #cccccc;
+        }
+
+        @media print {
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            body {
+                margin: 1.6cm;
+                visibility: visible;
+                background: white;
+            }
+        }
+        </style>
+
+        
+
+        </head><body class='print'>`;
+    var footstr = "</body";
+    var newstr = div.innerHTML;
+    var oldstr = document.body.innerHTML;
+    document.body.innerHTML = headstr + newstr + footstr;
+    window.print();
+    document.body.innerHTML = oldstr;
+    return false;
+}
+
+
+function borrar(index){
+    if(confirm("Quieres borrar este hecho?")){
+        db_datos.splice(index, 1);
+        mostrarDatos();
+        var tmp_data = JSON.stringify(db_datos);
+        localStorage.setItem("db_datos", tmp_data);
+    }
+}
+
+function cargarPartida(){
+    var contenedor = document.getElementById("contenedor_carga");
+
+
+    var tmp_data = localStorage.getItem("db_datos");
+    if(tmp_data != null){
+        db_datos = JSON.parse(tmp_data);
+        mostrarDatos();
+    }
+}
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+    <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

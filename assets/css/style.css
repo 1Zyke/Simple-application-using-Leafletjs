@@ -1,0 +1,135 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap');
+
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+a{
+    text-decoration: none;
+}
+
+ul{
+    list-style: none;
+}
+
+header{
+    display: flex;
+    background-color: #483D8B;
+    justify-content: space-around;
+    padding: 1rem 0;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+}
+
+.logo img{
+    width: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.header__logo {
+    color: #eeee;
+    font-weight: 600;
+}
+
+.nav__list{
+    display: flex;
+    align-items: center;
+}
+
+.nav__item {
+    margin: 0 8px;
+}
+
+.nav__link {
+    padding:10px;
+    color: #eeee;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 5px;
+}
+
+.nav__libk:hover {
+    background-color: #00adb5;
+}
+
+.header__toggle,
+.header__close {
+    display: none;
+}
+
+@media screen and (max-width: 768px) {
+    header{
+        height: 48px;
+        justify-content: space-between;
+        padding: 0 28px;
+    }
+
+    .logo a{
+        font-size: 0.9rem;
+    }
+    .logo img{
+        width: 30px;
+    }
+
+    .header__toggle{
+        display: inline;
+        color: #eee;
+        font-size: 24px;
+    }
+
+    .header__close{
+        position: absolute;
+        right: 24px;
+        display: block;
+        font-size: 24px;
+        border-radius: 50%;
+    }
+
+    .header__close:hover{
+        background-color: #00adb5;
+    }
+
+    .nav{
+        position: fixed;
+        top: 0;
+        /* right: -100%; */
+        background-color: #483D8B;
+        color: #eee;
+        width: 60%;
+        height: 100vh;
+        padding: 24px 0;
+        z-index: 100;
+        transition: 0.5s;
+        border-radius: 0 0 0 50%;
+    }
+    .nav__list{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .nav__item {
+        margin: 2rem 0;
+    }
+
+    .nav__item:hover{
+        background-color: #00adb5;
+        border-radius: 50px;
+    }
+
+    .show{
+        right: 0;
+    }
+
+
+}
